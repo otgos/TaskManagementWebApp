@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+    <meta charset="UTF-8">
+    <link rel ="stylesheet" type="text/css" th:href="@{'/css/bootstrap.css'}">
+    <script src="https://kit.fontawesome.com/06833f5708.js" th:crossorigin="anonymous"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet" type="text/css" />
+
+    <title>Task Manager</title>
+</head>
+
+<body>
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: rgba(36, 108, 201, 0.83);">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{'/'}"><i class="fa-solid fa-list-check"></i></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" th:href="@{'/'}"><i class="fa-solid fa-house-user"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{'/addTask'}"> <i class="fa-solid fa-calendar-plus"></i> Add Task</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Dropdown
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled">Disabled</a>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="container mt-3" style="min-height: 800px;">
+    <div class="row">
+        <div class="col-9" layout:fragment="myContent">
+
+        </div>
+        <div class="col-3">
+            <div class="list-group">
+                <a th:href="@{'/'}" class="list-group-item list-group-item-action active" aria-current="true">
+                    All TASKS
+                </a>
+                <br>
+                <a th:href="${'/importantAndUrgentTasks'}" class="list-group-item list-group-item-action active" aria-current="true">
+                    IMPORTANT & URGENT TASKS
+                </a>
+                <a th:href="${'/urgentTasks'}" class="list-group-item list-group-item-action">URGENT TASKS</a>
+                <a th:href="${'/notUrgentTasks'}" class="list-group-item list-group-item-action">NOT URGENT TASKS</a>
+                <a th:href="${'/importantTasks'}" class="list-group-item list-group-item-action">IMPORTANT TASKS</a>
+                <a th:href="${'/notImportantTasks'}" class="list-group-item list-group-item-action">NOT IMPORTANT TASKS</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type = "text/javascript" th:src="@{'/js/bootstrap.bundle.js'}"></script>
+</html>

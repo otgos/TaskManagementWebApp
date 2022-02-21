@@ -1,0 +1,151 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/layout.html"
+>
+<div layout:fragment="myContent">
+    <div class="row">
+        <div class="col-6 mx-auto">
+            <div th:if="${task!=null}">
+                <form th:action="${'/updateTask'}" method="post">
+                    <input type="hidden"  name="id" th:value="${task.id}">
+
+                    <div class="mt-3">
+                        <label>NAME :</label>
+                    </div>
+                    <div class="mt-2">
+                        <input type="text" name="taskName" class="form-control" placeholder="Insert name" th:value="${task.name}">
+                    </div>
+
+                    <div class="mt-3">
+                        <label>DESCRIPTiON :</label>
+                    </div>
+                    <div class="mt-2">
+                        <input type="text" name="description" class="form-control" placeholder="Insert name" th:value="${task.description}">
+                    </div>
+
+                    <div class="mt-3">
+                        <label>URGENCY :</label>
+                    </div>
+                    <div class="mt-2">
+                        <select class="form-select" name="urgency">
+                            <option th:each="urg:${urgencies}" th:text="${urg.name}" th:value="${urg.id}" th:selected="${task.urgency.id!=null && urg.id==task.urgency.id}"></option>
+                        </select>
+                    </div>
+
+                    <div class="mt-3">
+                        <label>DUE DATE :</label>
+                    </div>
+                    <div class="mt-2">
+                        <input type="date" name="duedate" class="form-control"  th:value="${task.duedate}?${#dates.format(task.getDuedate(), 'yyyy-MM-dd')}">
+                    </div>
+
+                    <div class="mt-3">
+                        <label>DAYS REMAINING :</label>
+                    </div>
+                    <div class="mt-2">
+                        <input type="text" readonly class="form-control"  th:value="${task.getIscomplete()}">
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn btn-success">UPDATE TASK </button>
+                        <button type="button" class="btn btn-danger ms-2" data-bs-toggle="modal" data-bs-target="#deleteTaskModal">
+                            DELETE TASK
+                        </button>
+                    </div>
+
+                </form>
+
+                <div class="modal fade" id="deleteTaskModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form th:action="${'/deleteTask'}" method="post">
+                                <input type="hidden"  name="id"  th:value="${task.id}">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Confirm Delete</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Sure???
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">NO, NOT SURE...</button>
+                                    <button  class="btn btn-danger">YES, SURE</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div th:if="${task==null}">
+
+                <h2 class="text-center">
+                    404 Sudent not found!
+                </h2>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" mt-5>
+        <div class="col-6 mx-auto">
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <td>ID</td>
+                    <td colspan="2">TASK TYPE</td>
+                    <td style="width: 7%;">UNASSIGN</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="tt:${task.taskType}">
+                    <td th:text="${tt.id}"></td>
+                    <td th:text="${tt.name +' (' +tt.description +')'}"></td>
+                    <td>
+                        <form th:action="@{'/unassignType'}" method="post">
+                            <input type="hidden" name="taskType_id" th:value="${tt.id}">
+                            <input type="hidden" name="tasks_id" th:value="${task.id}">
+                            <button class="btn btn-danger">-</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+    <div class="row" mt-5>
+        <div class="col-6 mx-auto">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <td>ID</td>
+                        <td>TASK TYPE</td>
+                        <td style="width: 7%;">ASSIGN</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="tt:${taskTypes}">
+                        <td th:text="${tt.id}"></td>
+                        <td th:text="${tt.name +' (' +tt.description +')'}"></td>
+                        <td>
+                            <form th:action="@{'/assignType'}" method="post">
+                                <input type="hidden" name="taskType_id" th:value="${tt.id}">
+                                <input type="hidden" name="tasks_id" th:value="${task.id}">
+                                <button class="btn btn-success">+</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+</html>

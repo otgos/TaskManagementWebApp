@@ -1,0 +1,66 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/layout.html"
+>
+<div layout:fragment="myContent">
+    <div class="row">
+        <div class="col-6 mx-auto">
+            <form action="/addTask" method="post">
+
+                <div class="mt-3">
+                    <label>NAME :</label>
+                </div>
+                <div class="mt-2">
+                    <input type="text" name="taskName" class="form-control" placeholder="Insert task name">
+                </div>
+
+                <div class="mt-3">
+                    <label>DESCRIPTION :</label>
+                </div>
+                <div class="mt-2">
+
+                    <input type="textarea" row="4" name="descrption" class="form-control" placeholder="Insert task description">
+
+                </div>
+
+                <div class="mt-3">
+                    <label>DUE DATE :</label>
+                </div>
+                <div class="mt-2">
+                    <input type="date" name="duedate" class="form-control" placeholder="Select due date">
+                </div>
+
+                <div class="mt-3">
+                    <label>URGENCY :</label>
+                </div>
+                <div class="mt-2">
+                    <select class="form-select" name="urgency">
+                        <option th:each="ur:${urgencies}" th:text="${ur.name}" th:value="${ur.id}"></option>
+                    </select>
+                </div>
+
+                <div class="mt-3">
+                    <label>IMPORTANCE :</label>
+                </div>
+                <div class="mt-2">
+                    <select class="form-select" name="importance">
+                        <option th:each="imp:${importance}" th:text="${imp.name}" th:value="${imp.id}"></option>
+                    </select>
+                </div>
+
+
+                <div class="mt-3">
+                    <button class="btn btn-success">ADD TASK </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+
+
+
+</div>
+
+</html>

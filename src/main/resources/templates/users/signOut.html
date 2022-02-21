@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/layout.html"
+>
+<div layout:fragment="myContent">
+
+
+    <div class="row">
+        <div class="col-6 mx-auto">
+            <form th:action="@{'/toExit'}" method="post">
+
+
+                <div class="mt-2">
+                    <input type="password" name="user_password" class="form-control" placeholder="Insert password">
+                </div>
+
+                <div class="mt-3">
+                    <button class="btn btn-success">SIGN OUT </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+</html>
