@@ -21,6 +21,13 @@ public class AuthRoles implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return null;
+        return role;
+    }
+
+    public String toString(){
+        return this.role;
+    }
+    public String toStringDes(){
+        return this.description;
     }
 }

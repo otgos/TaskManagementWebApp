@@ -24,6 +24,15 @@
                     </div>
 
                     <div class="mt-3">
+                        <label>ASSIGNED USER :</label>
+                    </div>
+                    <div class="mt-2">
+                        <select class="form-select"  name="user_id">
+                            <option type="checkbox" th:each="usr:${users}" th:text="${usr.fullName +' - '+usr.email +' - '+usr.getRole()}" th:value="${usr.id}" th:field="${task.user}"></option>
+                        </select>
+                    </div>
+
+                    <div class="mt-3">
                         <label>URGENCY :</label>
                     </div>
                     <div class="mt-2">

@@ -7,8 +7,17 @@
 
     <div layout:fragment="myContent">
 
-        <h2>hey ADMIN. WELCOME.</h2>
+        <div class="mt-3">
+            <h2>HEY <span th:text="${currentUser.fullName}"></span> </h2>
+            <p>Your roles is/are : <span th:text="${currentUser.role}"></span>.</p>
+        </div>
 
+        <div class="mt-3">
+            <a th:href="@{'/admin/userList'}">CLICK TO SEE USER LIST</a>
+        </div>
+        <div class="mt-3">
+            <a th:href="@{'/main'}">CLICK TO SEE TASK LIST</a>
+        </div>
 
     </div>
 

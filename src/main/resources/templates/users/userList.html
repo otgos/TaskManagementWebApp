@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/layout.html">
+
+    <div layout:fragment="myContent">
+
+        <div class="row">
+            <div class="col-12">
+                <h3 class="text-center">LIST OF ALL USERS</h3>
+                <br>
+                <a th:href="@{'/admin/adminPanel'}"><i class="fa-solid fa-backward-step"></i> BACK TO ADMIN PANEL PAGE</a>
+                <br>
+                <table class="table table-striped table-blue">
+                    <thead>
+                    <th>ID</th>
+                    <th>FULL NAME</th>
+                    <th>EMAIL</th>
+                    <th>ROLE</th>
+                    <th> <i class="fa-solid fa-square-info"></i> DETAIL</th>
+                    </thead>
+                    <tbody>
+                    <tr  th:each="usr: ${users}">
+
+                        <td type="hidden" th:text="${usr.id}"></td>
+
+
+                        <td th:text="${usr.fullName}"></td>
+                        <td th:text="${usr.email}"></td>
+                        <td th:text="${usr.role}"></td>
+
+                        <td>
+                            <a th:href = "@{'user/userDetail/' + ${usr.id}}" class="btn btn-primary btn-sm" > <i class="fa-solid fa-memo-circle-info"></i> DETAIL</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+</html>

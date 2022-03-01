@@ -30,7 +30,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.exceptionHandling().accessDeniedPage("/accessError");
 
         http.authorizeRequests()
-                        .antMatchers("/css/**", "/js/**").permitAll();
+                .antMatchers("/css/**", "/js/**").permitAll();
+
+
         http.formLogin()
                 .loginProcessingUrl("/toEnter").permitAll() //<--where to send post request to sign in
                 .loginPage("/signIn").permitAll()//<-- default page to sign in

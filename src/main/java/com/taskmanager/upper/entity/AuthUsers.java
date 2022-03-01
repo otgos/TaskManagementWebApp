@@ -7,7 +7,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 @Entity
@@ -24,7 +26,7 @@ public class AuthUsers implements UserDetails {
     private String password;
     private String fullName;
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<AuthRoles> role;
+    private List<AuthRoles> role = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -54,5 +56,10 @@ public class AuthUsers implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return  fullName + ' ' + email;
     }
 }

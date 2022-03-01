@@ -1,15 +1,29 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/layout.html">
 <head></head>
 
 
     <div layout:fragment="myContent">
 
-        <h2>Welcom to Task Manager App. Please sign in to continue.</h2>
+        <h2 class="mt-5 text-center">Welcome to Task Manager App. Important Anouncements.</h2> <br>
+        <div class="row mt-3 py-2" th:each="ann: ${announcements}" style="background-color: rgb(239,217,197);">
+            <div class="col-12 mx-auto">
 
-        <a th:href="@{'/signIn'}">SIGN IN</a>
+                <h3>
+                    <a th:href="@{'/announcement/readAnnouncement/'+${ann.id}}" th:text="${ann.title}" style="color: black; text-decoration: none;"></a>
+                </h3>
+
+                <p>
+                    Posted at :<strong th:utext="${#dates.format(ann.postDate, 'yyyy-MM-dd')}"></strong>
+                </p>
+
+            </div>
+
+        </div>
+
     </div>
 
 </html>

@@ -1,44 +1,75 @@
 <!DOCTYPE html>
 <html
+        lang="en"
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
 <head>
     <meta charset="UTF-8">
     <link rel ="stylesheet" type="text/css" th:href="@{'/css/bootstrap.css'}">
     <script src="https://kit.fontawesome.com/06833f5708.js" th:crossorigin="anonymous"></script>
+    <script type="text/javascript"  th:src="@{'/tinymce/tinymce.min.js'}"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet" type="text/css" />
 
     <title>Task Manager</title>
 </head>
 
 <body>
-<div class="container">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: rgba(36, 108, 201, 0.83);">
+<div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="background-color: rgba(201,88,36,0.83);">
         <div class="container-fluid">
-            <a class="navbar-brand" th:href="@{'/'}"><i class="fa-solid fa-list-check"></i></a>
+            <a class="navbar-brand" th:href="@{'/'}"><i class="fa-solid fa-list-check"></i> Task Management</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" th:href="@{'/'}"><i class="fa-solid fa-house-user"></i></a>
+                        <a class="nav-link active" aria-current="page" th:href="@{'/'}"><i class="fa-solid fa-house-user"></i> Home</a>
                     </li>
-                    <li class="nav-item">
+
+                    <li class="nav-item" sec:authorize="isAnonymous()">
+                        <a class="nav-link active" aria-current="page" th:href="@{'/user/signIn'}" ><i class="fa-solid fa-right-to-bracket"></i> Sign In</i></a>
+                    </li>
+
+                    <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN')">
+                        <a class="nav-link" th:href="@{'/admin/adminPanel'}">Admin Panel</a>
+                    </li>
+
+                    <li class="nav-item" sec:authorize="hasAnyRole('ROLE_MODERATOR')">
+                        <a class="nav-link" th:href="@{'/moderator/moderatorPanel'}">Moderator Panel</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyRole('ROLE_USER')">
+                        <a class="nav-link" th:href="@{'/user/userPanel'}">User Panel</a>
+                    </li>
+
+                    <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')">
                         <a class="nav-link active" th:href="@{'/addTask'}"> <i class="fa-solid fa-calendar-plus"></i> Add Task</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+                    <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')">
+                        <a class="nav-link active" th:href="@{'/moderator/addUser'}"> <i class="fa-solid fa-user-plus"></i> Add User</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')">
+                        <a class="nav-link active" th:href="@{'/announcement/addAnnouncement'}"> <i class="fa-solid fa-user-plus"></i> Add Announcement</a>
+                    </li>
+
+                    <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${currentUser.fullName}">
                             Dropdown
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown" >
+                            <li><a class="dropdown-item" th:href="@{'/user/profile'}" >My Profile</a></li>
+                            <li><a class="dropdown-item" th:href="@{'/user/notification'}">Notification</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            <li><a class="dropdown-item" href="JavaScript:void(0)" onclick="document.getElementById('exitform').submit()">Log Out</a></li>
                         </ul>
+                        <form th:action="@{'/toExit'}" id="exitform">
+
+                        </form>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link disabled">Disabled</a>
@@ -74,6 +105,12 @@
         </div>
     </div>
 </div>
+<div class="container mt-3 bg-dark py-3">
+    <div class="row">
+        <p class="text-center text-light">Copyright &copy; 2022.</p>
+    </div>
+</div>
 </body>
 <script type = "text/javascript" th:src="@{'/js/bootstrap.bundle.js'}"></script>
+
 </html>

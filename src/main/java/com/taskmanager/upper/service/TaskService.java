@@ -217,4 +217,7 @@ public class TaskService {
     }
 
 
+    public List<Tasks> getTasksByUser(Long id){
+        return taskRepository.findAllByUserId(id);
+    }
 }

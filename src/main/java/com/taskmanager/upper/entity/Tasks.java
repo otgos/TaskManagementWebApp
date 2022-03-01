@@ -42,6 +42,9 @@ public class Tasks {
     @ManyToOne(fetch = FetchType.LAZY)
     private Important important;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private AuthUsers user;
+
     @Column (name="imoprtance")
     private Importance importance;
 

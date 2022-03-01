@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/layout.html">
+<head></head>
+
+
+    <div layout:fragment="myContent">
+
+        <h2 class="mt-5 text-center">Welcome to Task Manager App. Important Anouncements.</h2> <br>
+        <div class="row mt-3"  th:if="${announcement!=null}">
+            <div class="col-12 mx-auto">
+
+                <h3 th:utext="${announcement.title}">
+
+                </h3>
+
+                <p th:utext="${announcement.body}">
+
+                </p>
+
+                <p>
+                    Posted at :<strong th:utext="${#dates.format(announcement.postDate, 'yyyy-MM-dd')}"></strong>
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="row mt-3" style="background-color: rgb(239,217,197);" th:if="${announcement==null}">
+            <div class="col-12 mx-auto">
+
+                <h3 class="text-center">
+                    403 NEWS NOT FOUND
+                </h3>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</html>

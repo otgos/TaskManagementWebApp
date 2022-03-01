@@ -39,4 +39,9 @@ public interface TaskRepository extends JpaRepository<Tasks, Long> {
 
     List<Tasks> findAllByOrderByDuedateDesc();
 
+    @Query(
+            value = "SELECT * FROM tasks t WHERE t.user_id = ?",
+            nativeQuery = true)
+    List<Tasks> findAllByUserId(Long id);
+
 }

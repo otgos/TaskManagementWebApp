@@ -7,7 +7,7 @@
 
     <div layout:fragment="myContent">
 
-        <h2>Hello, It is your Profile.</h2>
+        <h2>Hello, It is profile page of <span th:text="${currentUser.fullName}"></span> .</h2>
 
 
         <form th:action="@{'/toExit'}" method="post">
@@ -18,6 +18,53 @@
             </div>
 
         </form>
+
+        <form action="/user/updateProfile" method="post">
+            <div class="container rounded bg-white mt-5 mb-5">
+                <div class="row">
+                    <div class="col-md-3 border-right">
+                        <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span th:text="${currentUser.fullName}"></span><span class="text-black-50" th:text="${currentUser.email}"></span><span> </span></div>
+                    </div>
+                    <div class="col-md-5 border-right">
+                        <div class="p-3 py-5">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h4 class="text-right">Profile Settings</h4>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-12"><label class="labels">Full Name</label><input type="text" required name="fullName" class="form-control" placeholder="Insert full name" th:value="${currentUser.fullName}"></div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12"><label class="labels">Old Password</label><input type="password" required name="oldPassword" class="form-control" placeholder="enter your old password" value=""></div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-md-12"><label class="labels">New Password</label><input type="password" required name="newPassword" class="form-control" placeholder="enter your new password" value=""></div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-md-12"><label class="labels">Confirm New Password</label><input type="password" required name="reNewPassword" class="form-control" placeholder="confirm your new password" value=""></div>
+                            </div>
+                            <div class="row mt-3">
+                            </div>
+                            <div class="mt-5 text-center"><button class="btn btn-success">Update Profile</button></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 py-5">
+                            <div class="d-flex justify-content-between align-items-center experience"><span>Role :</span><span class="border px-3 p-1 add-experience" th:text="${currentUser.role}"></span></div><br>
+
+                            <div class="col-md-12"><label class="labels">Additional Details</label><input type="text" class="form-control" placeholder="additional details" value=""></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+    </div>
+</div>
+
+
     </div>
 
 </html>

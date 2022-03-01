@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/layout.html">
+<head></head>
+
+    <div layout:fragment="myContent">
+        <script>
+            tinymce.init({
+                selector: '#contentArea'
+            });
+        </script>
+        <h2 class="text-center">ADD ANNOUNCEMENT</h2>
+        <div class="row mt-3">
+            <div class="col-12">
+                <form th:action="@{'/announcement/addAnnouncement'}" method="post">
+                    <div class="row">
+                        <div class="col-12">
+                            <label>TITLE: </label>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <input type="text" class="form-control" name="title" placeholder="insert title" required>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <label>CONTENT: </label>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <textarea name="body" id="contentArea"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <button class="btn btn-success" >ADD ANNOUNCEMENT</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+</html>
