@@ -10,51 +10,50 @@
             <a th:href="@{'/admin/userList'}"><i class="fa-solid fa-backward-step"></i> BACK TO USER LIST PAGE</a>
             <br>
             <div th:if="${user!=null}">
-                <form th:action="${'/user/userEdit'}" method="post">
-                    <input type="hidden"  name="id" th:value="${user.id}">
+            <form action="/admin/user/userDetail" method="post">
+                <input type="hidden" name="ids" id="userId" th:value="${user.id}">
 
-                    <div class="mt-3">
-                        <label>FULL NAME :</label>
-                    </div>
-                    <div class="mt-2">
-                        <input type="text" name="user_name" class="form-control" th:value="${user.fullName}">
-                    </div>
+                <div class="mt-3">
+                    <label>FULL NAME :</label>
+                </div>
+                <div class="mt-2">
+                    <input type="text" id = "userName" name="user_name" class="form-control" th:value="${user.fullName}">
+                </div>
 
-                    <div class="mt-3">
-                        <label>EMAIL :</label>
-                    </div>
-                    <div class="mt-2">
-                        <input type="text" name="user_email" class="form-control" th:value="${user.email}">
-                    </div>
+                <div class="mt-3">
+                    <label>EMAIL :</label>
+                </div>
+                <div class="mt-2">
+                    <input type="text" id="email" name="user_email" class="form-control" th:value="${user.email}">
+                </div>
 
-                    <div class="form-group mt-3" >
-                        <label class="col-form-label col-4">ASSIGNED ROLES :</label>
-                        <div class="col-8 text-left">
-                            <th:block  th:each="rl : ${roleList}">
-                                <ul>
-                                <input name="userRole" class="m-1" type="checkbox" th:field="${user.role}"
-                                       th:text = "${rl.role}"
-                                       th:value="${rl.id}"/>
+                <div class="form-group mt-3">
+                    <label class="col-form-label col-4">ASSIGNED ROLES :</label>
+                    <div class="col-8 text-left">
+                        <th:block th:each="rl : ${roleList}">
+                            <div >
+                                <input type="checkbox" th:field="${user.role}" th:text="${rl.getRole()}" th:value="${rl.id}"/>
 
-                                </ul>
-                            </th:block>
-                        </div>
-
+                            </div>
+                        </th:block>
                     </div>
 
-                    <div class="mt-3">
-                        <button class="btn btn-success">UPDATE USER </button>
-                        <button type="button" class="btn btn-danger ms-2" data-bs-toggle="modal" data-bs-target="#deleteTaskModal">
-                            DELETE USER
-                        </button>
-                    </div>
+                </div>
 
-                </form>
+                <div class="mt-3">
+                    <button class="btn btn-success" onclick="updateUser()">UPDATE USER</button>
+                    <button type="button" class="btn btn-danger ms-2" data-bs-toggle="modal"
+                            data-bs-target="#deleteTaskModal">
+                        DELETE USER
+                    </button>
+                </div>
+
+            </form>
 
                 <div class="modal fade" id="deleteTaskModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <form th:action="${'user/deleteUser'}" method="post">
+                            <form th:action="${'/user/deleteUser'}" method="post">
                                 <input type="hidden"  name="id"  th:value="${user.id}">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="staticBackdropLabel">Confirm Delete</h5>
@@ -73,6 +72,98 @@
                 </div>
 
             </div>
+                <script type="text/javascript">
+                    function updateUser(){
+                        var userName= document.getElementById("userName").value;
+                        var userId= document.getElementById("userId").value;
+                        var email= document.getElementById("email").value;
+                        var roles= document.getElementById("roles").value;
+                        alert(roles);
+                        var params = "userName="+userName+"&email="+email+"&roles="+roles;
+                        var xhttp = new XMLHttpRequest();
+                        xhttp.onload = function() {
+
+                        }
+                        xhttp.open("POST", "/admin/user/userDetail/?userId="+userId);
+                        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                        xhttp.send(params);
+                    }
+
+                </script>
+            </div>
+
+
+            <div class="mt-3" >
+                <div class="list-group" id="commentsList">
+
+                </div>
+                <script type="text/javascript">
+                    function loadAllComments(){
+                        var annId= document.getElementById("annId").value;
+                        var currentUserId = document.getElementById("currentUserId");
+                        xhttp = new XMLHttpRequest();
+                        xhttp.onload = function() {
+                            var commentsHTML="";
+                            var commentList = JSON.parse(this.responseText);
+                            for(i = 0; i<commentList.length;i++){
+                                commentsHTML+="<a href='JavaScript:void(0)' class='list-group-item list-group-item-action'>";
+                                commentsHTML+="<div class='d-flex w-100 justify-content-between'>";
+                                commentsHTML+="<h5 class='mb-1'>"+commentList[i].fullName+"</h5>";
+                                if(currentUserId!=null && currentUserId.value==commentList[i].userId){
+                                    commentsHTML+="<small class='text-muted' onclick='deleteComment("+commentList[i].id+")'> × </small>";
+                                }
+                                commentsHTML+="</div>"
+                                commentsHTML+="<p class='mb-1'>"+commentList[i].commentText+"</p>";
+                                commentsHTML+="<small class='text-muted'>" +commentList[i].postDate+ "</small>";
+                                commentsHTML+="</a>"
+                            }
+                            document.getElementById("commentsList").innerHTML=commentsHTML;
+                        }
+                        xhttp.open("GET", "/api/announcement/allComments?annId="+annId);
+                        xhttp.send();
+                    }
+
+                    function deleteComment(id) {
+                        var conf = confirm("Are you sure?");
+                        if(conf){
+                            var xhttp = new XMLHttpRequest();
+                            xhttp.onload = function() {
+                                loadAllComments();
+                            }
+                            xhttp.open("POST", "/api/announcement/deleteComment");
+                            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                            xhttp.send("id="+id);
+                        }
+                    }
+                    window.onload=loadAllComments;
+                </script>
+
+                <div class="modal fade" id="deleteTaskModal" data-bs-backdrop="static" data-bs-keyboard="false"
+                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form th:action="${'user/deleteUser'}" method="post">
+                                <input type="hidden" name="id" th:value="${user.id}">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Confirm Delete</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Sure???
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">NO, NOT
+                                        SURE...
+                                    </button>
+                                    <button class="btn btn-danger">YES, SURE</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
             <div th:if="${user==null}">
 
                 <h2 class="text-center">
@@ -82,7 +173,6 @@
             </div>
         </div>
     </div>
-
 
 
 </div>

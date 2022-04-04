@@ -45,7 +45,8 @@
                         <label>DUE DATE :</label>
                     </div>
                     <div class="mt-2">
-                        <input type="date" name="duedate" class="form-control"  th:value="${task.duedate}?${#dates.format(task.getDuedate(), 'yyyy-MM-dd')}">
+                        <input type="date" name="duedate" class="form-control"
+                               th:value="${task.duedate}?${#dates.format(task.getDuedate(), 'yyyy-MM-dd')}">
                     </div>
 
                     <div class="mt-3">

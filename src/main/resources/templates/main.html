@@ -8,15 +8,14 @@
         <div class="row">
             <div class="col-12">
                 <br>
-                <a th:href="@{'/admin/userList'}"><i class="fa-solid fa-backward-step"></i> BACK TO USER LIST PAGE</a>
+                <a th:href="@{'/main'}"><i class="fa-solid fa-backward-step"></i> BACK TO TASK LIST PAGE</a>
                 <br>
-                <h3 class="text-center">TASKS TO BE COMPLETED</h3>
+                <h3 class="text-center">ALL TASKS</h3>
                 <br>
-                <table class="table table-striped table-blue">
+                <table class="table table-striped table-blue" style="font-size: 12px">
                     <thead>
-                    <th>COMPLETED</th>
+<!--                    <th>STATUS</th>-->
                     <th>NAME</th>
-
                     <th>DUE DATE</th>
                     <th>DAYS REMAINING</th>
                     <th>IMPORTANCE</th>
@@ -27,14 +26,14 @@
                     <tbody>
                     <tr  th:each="tsk: ${tasks}">
 <!--                        <td type="hidden" th:text="${tsk.id}"></td>-->
-                        <td>
-                            <form th:action="@{'/completedTask'}" method="post">
-                                <input type="hidden" name="taskId" th:value="${tsk.id}">
-                                <button class="btn btn-success"><i class="fa-regular fa-circle-check"></i></button>
-                            </form>
-                        </td>
-
-                        <td th:text="${tsk.name}"></td>
+<!--                        <td>-->
+<!--                            <form th:action="@{'/completedTask'}" method="post">-->
+<!--                                <input type="hidden" name="taskId" th:value="${tsk.id}">-->
+<!--                                <button class="btn btn-success"><i class="fa-regular fa-circle-check"></i></button>-->
+<!--                            </form>-->
+<!--                        </td>-->
+<!--                        <td th:text="${tsk.response.acceptance}"></td>-->
+                        <td th:text="${tsk.name}" style="color: #406094; font-size: 16px"></td>
                         <td th:text="${#dates.format(tsk.duedate, 'yyyy-MM-dd')}"></td>
                         <td th:text="${tsk.getIscomplete()}"></td>
                         <td th:text = "${tsk.urgency.name}"></td>
@@ -49,50 +48,55 @@
                 </table>
 
 
+                <span id="submitted" style="display: none;" th:text="${submitted}"></span>
+                <span id="responded" style="display: none;" th:text="${respnded}"></span>
+                <span id="pending" style="display: none;" th:text="${pend}"></span>
+                <span id="rejected" style="display: none;" th:text="${rejected}"></span>
+                <span id="unassigned" style="display: none;" th:text="${unassigned}"></span>
+
             </div>
         </div>
 
-        <div class="col-12">
-            <h3 class="text-center">TASKS COMPLETED</h3>
-            <br>
-            <table class="table table-striped table-blue">
-                <thead>
-                <th>COMPLETED</th>
-                <th>NAME</th>
 
-                <th>DUE DATE</th>
-                <th>DAYS REMAINING</th>
-                <th>IMPORTANCE</th>
-                <th>URGENCY</th>
-                <th> <i class="fa-solid fa-square-info"></i> DETAIL</th>
-                </thead>
-                <tbody>
-                <tr  th:each="tsk: ${completedTasks}">
-                    <!--                        <td type="hidden" th:text="${tsk.id}"></td>-->
-                    <td>
-                        <form th:action="@{'/completedTask'}" method="post">
-<!--                            <input type="hidden" name="tasksId" th:value="${task.id}">-->
-                            <button class="btn btn-success"><i class="fa-regular fa-circle-check"></i></button>
-                        </form>
-                    </td>
+        <div class="container my-4">
+            <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
 
-                    <td th:text="${tsk.name}"></td>
-                    <td th:text="${#dates.format(tsk.duedate, 'yyyy-MM-dd')}"></td>
-                    <td th:text="${tsk.getIscomplete()}"></td>
-                    <td th:text = "${tsk.urgency.name}"></td>
-                    <td th:text = "${tsk.important.name}"></td>
+            <script>
 
+                var submitted  = document.getElementById("submitted").innerHTML;
+                var responded  = document.getElementById("responded").innerHTML;
+                var pending  = document.getElementById("pending").innerHTML;
+                var rejected  = document.getElementById("rejected").innerHTML;
+                var unassigned  = document.getElementById("unassigned").innerHTML;
+                var xValues = ["COMPLETED", "IN PROGRESS", "PENDING", "NOT ASSIGNED", "REJECTED"];
+                var yValues = [submitted, responded, pending, unassigned,rejected];
+                var barColors = [
 
-                    <td>
-                        <a th:href = "@{'/taskDetail/' + ${tsk.id}}" class="btn btn-primary btn-sm" > <i class="fa-solid fa-square-info"></i>DETAILS</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                    "#00aba9",
+                    "#2b5797",
+                    "#e8c3b9",
+                    "#1e7145",
+                    "#b91d47"
+                ];
 
-
+                new Chart("myChart", {
+                    type: "pie",
+                    data: {
+                        labels: xValues,
+                        datasets: [{
+                            backgroundColor: barColors,
+                            data: yValues
+                        }]
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: "TASK COMPLETION STATISTICS"
+                        }
+                    }
+                });
+            </script>
         </div>
-    </div>
 
     </div>
 </html>

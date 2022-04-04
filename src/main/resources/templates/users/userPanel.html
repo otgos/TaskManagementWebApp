@@ -13,47 +13,80 @@
             <p>Your roles is/are : <span th:text="${currentUser.role}"></span>.</p>
         </div>
 
-        <h3 class="text-center"> <span th:text="${taskNum}"></span> TASK(S) ASSIGNED TO YOU</h3>
-        <br>
-        <table class="table table-striped table-blue">
-            <thead>
-            <th>COMPLETED</th>
-            <th>NAME</th>
+        <div>
 
-            <th>DUE DATE</th>
-            <th>DAYS REMAINING</th>
-            <th>IMPORTANCE</th>
-            <th>URGENCY</th>
-            <th>ASSIGNED TO</th>
-            <th> <i class="fa-solid fa-square-info"></i> DETAIL</th>
-            </thead>
-            <tbody>
-            <tr  th:each="tsk: ${tasks}">
-                <!--                        <td type="hidden" th:text="${tsk.id}"></td>-->
-                <td>
-                    <form th:action="@{'/completedTask'}" method="post">
-                        <input type="hidden" name="taskId" th:value="${tsk.id}">
-                        <button class="btn btn-success"><i class="fa-regular fa-circle-check"></i></button>
-                    </form>
-                </td>
+            <h3 class="text-center"> <span th:text="${taskNum}"></span> TASK(S) ASSIGNED TO YOU</h3>
+            <br>
+            <table class="table table-striped table-blue" id ="myTable">
+                <thead>
+                <!--            <th>STATUS</th>-->
+                <th>NAME</th>
 
-                <td th:text="${tsk.name}"></td>
-                <td th:text="${#dates.format(tsk.duedate, 'yyyy-MM-dd')}"></td>
-                <td th:text="${tsk.getIscomplete()}"></td>
-                <td th:text = "${tsk.urgency.name}"></td>
-                <td th:text = "${tsk.important.name}"></td>
-                <td th:text = "${tsk.user}"></td>
+                <th>DUE DATE</th>
+                <th>DAYS REMAINING</th>
+                <th>IMPORTANCE</th>
+                <th>URGENCY</th>
+                <th>ASSIGNED TO</th>
+                <th>ACTION</th>
+                </thead>
+                <tbody>
+                <tr  th:each="tsk: ${tasks}">
+                    <!--                        <td type="hidden" th:text="${tsk.id}"></td>-->
+                    <!--                <td th:text="${tsk.response.acceptance} ? ${tsk.response.acceptance} : 'Not Responded'"></td>-->
+                    <td th:text="${tsk.name}"></td>
+                    <td th:text="${#dates.format(tsk.duedate, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${tsk.getIscomplete()}"></td>
+                    <td th:text = "${tsk.urgency.name}"></td>
+                    <td th:text = "${tsk.important.name}"></td>
+                    <td th:text = "${tsk.user}"></td>
 
-                <td>
-                    <a th:href = "@{'/taskDetail/' + ${tsk.id}}" class="btn btn-primary btn-sm" > <i class="fa-solid fa-memo-circle-info"></i> DETAILS</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                    <td>
+                        <div class="col-sm-12">
+                            <a class="btn btn-info " style="color: #eee6e6" th:href = "@{'/user/acceptTask/' + ${tsk.id}}">Accept</a>
+                            <a class="btn btn-info " style="color: #6a1a21" th:href = "@{'/user/rejectTask/' + ${tsk.id}}">Reject</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
+        <div>
 
-    </div>
-</div>
+            <h3 class="text-center"> PLANNED TASKS </h3>
+            <br>
+            <table class="table table-striped table-blue" id ="myTable">
+                <thead>
+                <th>STATUS</th>
+                <th>NAME</th>
+
+                <th>DUE DATE</th>
+                <th>DAYS REMAINING</th>
+                <th>IMPORTANCE</th>
+                <th>URGENCY</th>
+                <th>ASSIGNED TO</th>
+                <th>ACTION</th>
+                </thead>
+                <tbody>
+                <tr  th:each="tsks: ${tasksAccepted}">
+                    <!--                        <td type="hidden" th:text="${tsk.id}"></td>-->
+                    <td th:text="${tsks.response.acceptance}"></td>
+                    <td th:text="${tsks.name}"></td>
+                    <td th:text="${#dates.format(tsks.duedate, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${tsks.getIscomplete()}"></td>
+                    <td th:text = "${tsks.urgency.name}"></td>
+                    <td th:text = "${tsks.important.name}"></td>
+                    <td th:text = "${tsks.user}"></td>
+
+                    <td>
+                        <div class="col-sm-12">
+                            <a class="btn btn-info " style="color: #ffffff" th:href = "@{'/user/submitTask/' + ${tsks.id}}">Submit</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
 
     </div>

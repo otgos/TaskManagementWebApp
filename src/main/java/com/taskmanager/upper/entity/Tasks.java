@@ -15,25 +15,25 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name="tasks")
+@Table(name = "tasks")
 public class Tasks {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name="description", columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name="duedate")
-    @DateTimeFormat (pattern="yyyy-MM-dd")
+    @Column(name = "duedate")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date duedate;
 
-    @Column(name="status")
+    @Column(name = "status")
     private String iscomplete;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -45,14 +45,23 @@ public class Tasks {
     @ManyToOne(fetch = FetchType.EAGER)
     private AuthUsers user;
 
-    @Column (name="imoprtance")
+    @Column(name = "imoprtance")
     private Importance importance;
 
     public Importance getImportance(Importance importance) {
         return importance;
     }
 
-    @Column(name="tasktype")
+    @Column(name = "tasktype")
     @ManyToMany(fetch = FetchType.LAZY)
     private List<TaskType> taskType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Response response;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Reject rejected;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Submit submit;
 }

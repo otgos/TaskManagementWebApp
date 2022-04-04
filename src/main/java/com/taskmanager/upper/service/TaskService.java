@@ -102,8 +102,8 @@ public class TaskService {
        return urgency;
     }
 
-    public List<Tasks> getAllUrgentTasks(){
-        List<Tasks> tasks = taskRepository.findAllUrgentTasks();
+    public List<Tasks> getAllUrgentTasks(Long id){
+        List<Tasks> tasks = taskRepository.findAllUrgentTasks(id);
 
         System.out.println(tasks);
         for(Tasks tsk: tasks){
@@ -123,8 +123,8 @@ public class TaskService {
         return tasks;
     }
 
-    public List<Tasks> getAllNotUrgentTasks(){
-        List<Tasks> tasks = taskRepository.findAllNotUrgentTasks();
+    public List<Tasks> getAllNotUrgentTasks(Long id){
+        List<Tasks> tasks = taskRepository.findAllNotUrgentTasks(id);
 
         System.out.println(tasks);
         for(Tasks tsk: tasks){
@@ -144,8 +144,8 @@ public class TaskService {
         return tasks;
     }
 
-    public List<Tasks> getAllImportantTasksOnly(){
-        List<Tasks> tasks = taskRepository.findAllImportantTasks();
+    public List<Tasks> getAllImportantTasksOnly(Long id){
+        List<Tasks> tasks = taskRepository.findAllImportantTasks(id);
 
         System.out.println(tasks);
         for(Tasks tsk: tasks){
@@ -165,8 +165,8 @@ public class TaskService {
         return tasks;
     }
 
-    public List<Tasks> getAllNotImportantTasksOnly(){
-        List<Tasks> tasks = taskRepository.findAllNotImportantTasks();
+    public List<Tasks> getAllNotImportantTasksOnly(Long id){
+        List<Tasks> tasks = taskRepository.findAllNotImportantTasks(id);
 
         for(Tasks tsk: tasks){
             LocalDate today = LocalDate.now();
@@ -185,8 +185,8 @@ public class TaskService {
         return tasks;
     }
 
-    public List<Tasks> getImportantAndUrgentTasks(){
-        List<Tasks> tasks = taskRepository.findAllNotImportantAndUrgentTasks();
+    public List<Tasks> getImportantAndUrgentTasks(Long id){
+        List<Tasks> tasks = taskRepository.findAllNotImportantAndUrgentTasks(id);
 
         for(Tasks tsk: tasks){
             LocalDate today = LocalDate.now();
@@ -219,5 +219,24 @@ public class TaskService {
 
     public List<Tasks> getTasksByUser(Long id){
         return taskRepository.findAllByUserId(id);
+    }
+    public List<Tasks> getAcceptedTasksByUser(Long id){
+        return taskRepository.findAllByUserIdAndResponseAccepted(id);
+    }
+
+    public List<Tasks> getAllSubmittedTasks(){
+        return taskRepository.findAllSubmittedTasks();
+    }
+    public List<Tasks> getAllRespondedTasks(){
+        return taskRepository.findAllRespndedTasks();
+    }
+    public List<Tasks> getAllPendingTasks(){
+        return taskRepository.findAllPendingTasks();
+    }
+    public List<Tasks> getAllRejectedTasks(){
+        return taskRepository.findAllRejectedTasks();
+    }
+    public List<Tasks> getAllUnassignedTasks(){
+        return taskRepository.findAllUnassignedTasks();
     }
 }

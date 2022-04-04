@@ -57,7 +57,13 @@ public class UserService implements UserDetailsService {
     public List<AuthUsers> getAllUsers(){
         return userRepository.findAll();
     }
+    public void deleteUser(Long id){
+        userRepository.deleteById(id);
+    }
 
+    public List<AuthUsers> getAllUsersByFilter(String keyword){
+        return userRepository.findByFullNameContainingIgnoreCase(keyword);
+    }
 
     public AuthUsers findUser(Long id){
         AuthUsers user = userRepository.findById(id).orElse(null);
@@ -71,5 +77,8 @@ public class UserService implements UserDetailsService {
     public List<AuthUsers> getOnlyUsers(){
        List<AuthUsers>  users = userRepository.findAllByRole();
         return users;
+    }
+    public AuthUsers addUser(AuthUsers user){
+        return userRepository.save(user);
     }
 }

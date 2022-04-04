@@ -1,0 +1,98 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/layout.html"
+>
+<div layout:fragment="myContent">
+    <h2 class="mt-5 text-center">Please enter the reason why this task was rejected.</h2> <br>
+
+    <div class="row">
+        <div class="col-12 mx-auto">
+            <input type="hidden" id="taskId" th:value="${task.id}">
+            <input type="hidden" id="currentUserId" th:value="${currentUser.id}" sec:authorize="isAuthenticated()">
+            <div th:if="${task!=null}">
+                <div>
+                    <table class="table table-responsive-xl table-blue">
+                        <thead>
+                        <th>NAME</th>
+                        <th>DUE DATE</th>
+                        <th>DAYS REMAINING</th>
+                        <th>IMPORTANCE</th>
+                        <th>URGENCY</th>
+                        <th>ASSIGNED TO</th>
+                        <th>ACTION</th>
+                        </thead>
+                        <tbody>
+                        <tr  >
+
+                            <td th:text="${task.name}"></td>
+                            <td th:text="${#dates.format(task.duedate, 'yyyy-MM-dd')}"></td>
+                            <td th:text="${task.getIscomplete()}"></td>
+                            <td th:text = "${task.important.name}"></td>
+                            <td th:text = "${task.urgency.name}"></td>
+                            <td th:text = "${task.user}"></td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <div class="mt-3">
+                        <label>ACCEPT or REJECT :</label>
+                    </div>
+                    <div class="mt-2">
+                        <select name="acceptance" id="acceptance" onchange="acceptOrReject(this);">
+                            <option value="None">Accept or Reject</option>
+                            <option value="Rejected">Reject</option>
+                        </select>
+
+
+                    </div>
+                    <div class="mt-3">
+                        <label>COMMENT :</label>
+                    </div>
+                    <div class="mt-2">
+                        <input type="text" name="comments" id= "comment" class="form-control" placeholder="enter comment">
+                    </div>
+
+                    <div class="mt-3">
+                        <button class="btn btn-success btn-sm" id="respondButton">RESPOND </button>
+                    </div>
+
+                    <script type="text/javascript">
+                        document.getElementById("respondButton").addEventListener('click', toRespond);
+                        function toRespond(){
+
+
+                            var taskId= document.getElementById("taskId").value;
+                            var acceptance = document.getElementById("acceptance").value;
+                            var comment = document.getElementById("comment").value;
+                            alert(acceptance);
+                            var params = "taskId="+taskId+"&acceptance="+acceptance+"&comments="+comment;
+
+                            var xhttp = new XMLHttpRequest();
+                            xhttp.onload = function() {
+                                if(this.status==200){
+                                    console.log(this.responseText);
+                                }else {
+                                    console.log("not working")
+                                }
+                            }
+                            xhttp.open("POST", "/api/response/addReject");
+                            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                            xhttp.send(params);
+                        }
+
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+</html>

@@ -8,22 +8,93 @@
 
     <div layout:fragment="myContent">
 
-        <h2 class="mt-5 text-center">Welcome to Task Manager App. Important Anouncements.</h2> <br>
+        <h2 class="mt-5 text-center">Welcome to Task Manager App. Important Announcements.</h2> <br>
         <div class="row mt-3"  th:if="${announcement!=null}">
             <div class="col-12 mx-auto">
+                <input type="hidden" id="annId" th:value="${announcement.id}">
+                <input type="hidden" id="currentUserId" th:value="${currentUser.id}" sec:authorize="isAuthenticated()">
+                <div style="background-color: rgba(179,205,224, 0.83); border-radius: 10px;">
+                    <h3 class="text-center" th:utext="${announcement.title}"></h3>
+                    <p th:utext="${announcement.body}"></p>
+                    <p>Posted at :<strong th:utext="${#dates.format(announcement.postDate, 'yyyy-MM-dd')}"></strong></p>
+                </div>
+                <div class="mt-3" sec:authorize="isAuthenticated()">
+                    <div class="row">
+                        <div class="col-12">
+                            <textarea class="form-control" id="comment" placeholder="leave a comment"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <button class="btn btn-success btn-sm" style="background-color: rgba(100,151,177, 0.83);" onclick="toLeaveComment()">POST COMMENT</button>
+                        </div>
+                    </div>
 
-                <h3 th:utext="${announcement.title}">
 
-                </h3>
+                    <script type="text/javascript">
+                        function toLeaveComment(){
+                            var annId= document.getElementById("annId").value;
+                            var comment = document.getElementById("comment");
 
-                <p th:utext="${announcement.body}">
+                            var xhttp = new XMLHttpRequest();
+                            xhttp.onload = function() {
+                                comment.value="";
+                                loadAllComments();
+                            }
+                            xhttp.open("POST", "/api/announcement/addComment");
+                            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                            xhttp.send("comment="+comment.value+"&annId="+annId);
+                        }
 
-                </p>
+                    </script>
+                </div>
 
-                <p>
-                    Posted at :<strong th:utext="${#dates.format(announcement.postDate, 'yyyy-MM-dd')}"></strong>
-                </p>
 
+                <div class="mt-3" >
+                    <div class="list-group" id="commentsList">
+
+                    </div>
+                    <script type="text/javascript">
+                        function loadAllComments(){
+                            var annId= document.getElementById("annId").value;
+                            var currentUserId = document.getElementById("currentUserId");
+                            xhttp = new XMLHttpRequest();
+                            xhttp.onload = function() {
+                                var commentsHTML="";
+                                var commentList = JSON.parse(this.responseText);
+                                for(i = 0; i<commentList.length;i++){
+                                    commentsHTML+="<a href='JavaScript:void(0)' class='list-group-item list-group-item-action'>";
+                                    commentsHTML+="<div class='d-flex w-100 justify-content-between'>";
+                                    commentsHTML+="<h5 class='mb-1'>"+commentList[i].fullName+"</h5>";
+                                    if(currentUserId!=null && currentUserId.value==commentList[i].userId){
+                                        commentsHTML+="<small class='text-muted' onclick='deleteComment("+commentList[i].id+")'> × </small>";
+                                    }
+                                    commentsHTML+="</div>"
+                                    commentsHTML+="<p class='mb-1'>"+commentList[i].commentText+"</p>";
+                                    commentsHTML+="<small class='text-muted'>" +commentList[i].postDate+ "</small>";
+                                    commentsHTML+="</a>"
+                                }
+                                document.getElementById("commentsList").innerHTML=commentsHTML;
+                            }
+                            xhttp.open("GET", "/api/announcement/allComments?annId="+annId);
+                            xhttp.send();
+                        }
+
+                        function deleteComment(id) {
+                            var conf = confirm("Are you sure?");
+                            if(conf){
+                                var xhttp = new XMLHttpRequest();
+                                xhttp.onload = function() {
+                                    loadAllComments();
+                                }
+                                xhttp.open("POST", "/api/announcement/deleteComment");
+                                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                                xhttp.send("id="+id);
+                            }
+                        }
+                        window.onload=loadAllComments;
+                    </script>
+                </div>
             </div>
 
         </div>

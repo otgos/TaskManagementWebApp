@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/layout.html">
+<head></head>
+
+
+    <div layout:fragment="myContent">
+
+        <h2 class="mt-5 text-center">Send message to ...</h2> <br>
+        <div class="row mt-3">
+            <div class="col-12 mx-auto" sec:authorize="isAuthenticated()">
+<!--                <input type="hidden" name="receiverId" id="receiverId" th:value="${receiver.id}">-->
+                <input type="hidden" name="senderId" id="senderId" th:value="${currentUser.id}">
+<!--                <div style="background-color: rgba(179,205,224, 0.83); border-radius: 10px;">-->
+
+                <div class="mt-3" sec:authorize="isAuthenticated()">
+                    <div class="row">
+                        <div class="col-6">
+                            <input type="text" class="form-control" id="subject" placeholder="write subject">
+                        </div>
+                        <div class="col-12 mt-3">
+                            <textarea class="form-control" id="body" placeholder="compose message"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <button class="btn btn-success btn-sm" style="background-color: rgba(100,151,177, 0.83);" onclick="comPoseMail()">Send Mail</button>
+                        </div>
+                    </div>
+
+
+                    <script type="text/javascript">
+                        function comPoseMail(){
+                            var sender= document.getElementById("senderId").value;
+                            var receiver= document.getElementById("receiverId").value;
+                            var subject = document.getElementById("subject");
+                            var body = document.getElementById("body");
+                            var params ="senderId="+sender+"&subject="+subject+"&body="+body+"&receiverId="+receiver;
+
+                            var xhttp = new XMLHttpRequest();
+                            xhttp.onload = function() {
+
+                            }
+                            xhttp.open("POST", "/api/mail/composeMail");
+                            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                            xhttp.send(params);
+                        }
+
+                    </script>
+                </div>
+
+
+                <div class="mt-3" >
+                    <div class="list-group" id="commentsList">
+
+                    </div>
+                    <script type="text/javascript">
+                        function loadAllComments(){
+                            var annId= document.getElementById("annId").value;
+                            var currentUserId = document.getElementById("currentUserId");
+                            xhttp = new XMLHttpRequest();
+                            xhttp.onload = function() {
+                                var commentsHTML="";
+                                var commentList = JSON.parse(this.responseText);
+                                for(i = 0; i<commentList.length;i++){
+                                    commentsHTML+="<a href='JavaScript:void(0)' class='list-group-item list-group-item-action'>";
+                                    commentsHTML+="<div class='d-flex w-100 justify-content-between'>";
+                                    commentsHTML+="<h5 class='mb-1'>"+commentList[i].fullName+"</h5>";
+                                    if(currentUserId!=null && currentUserId.value==commentList[i].userId){
+                                        commentsHTML+="<small class='text-muted' onclick='deleteComment("+commentList[i].id+")'> × </small>";
+                                    }
+                                    commentsHTML+="</div>"
+                                    commentsHTML+="<p class='mb-1'>"+commentList[i].commentText+"</p>";
+                                    commentsHTML+="<small class='text-muted'>" +commentList[i].postDate+ "</small>";
+                                    commentsHTML+="</a>"
+                                }
+                                document.getElementById("commentsList").innerHTML=commentsHTML;
+                            }
+                            xhttp.open("GET", "/api/announcement/allComments?annId="+annId);
+                            xhttp.send();
+                        }
+
+                        function deleteComment(id) {
+                            var conf = confirm("Are you sure?");
+                            if(conf){
+                                var xhttp = new XMLHttpRequest();
+                                xhttp.onload = function() {
+                                    loadAllComments();
+                                }
+                                xhttp.open("POST", "/api/announcement/deleteComment");
+                                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                                xhttp.send("id="+id);
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+</html>

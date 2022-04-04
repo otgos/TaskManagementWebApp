@@ -10,104 +10,328 @@
     <meta charset="UTF-8">
     <link rel ="stylesheet" type="text/css" th:href="@{'/css/bootstrap.css'}">
     <script src="https://kit.fontawesome.com/06833f5708.js" th:crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
     <script type="text/javascript"  th:src="@{'/tinymce/tinymce.min.js'}"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet" type="text/css" />
 
     <title>Task Manager</title>
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css?family=Varela+Round');
+        html, body {
+            overflow-x: hidden;
+            height: 100%;
+        }
+        body {
+            background: #fff;
+            padding: 0;
+            margin: 0;
+            font-family: 'Varela Round', sans-serif;
+        }
+        /*.header {*/
+        /*    display: block;*/
+        /*    margin: 0 auto;*/
+        /*    width: 100%;*/
+        /*    max-width: 100%;*/
+        /*    box-shadow: none;*/
+        /*    background-color: #FC466B;*/
+        /*    position: fixed;*/
+        /*    height: 60px!important;*/
+        /*    overflow: hidden;*/
+        /*    z-index: 10;*/
+        /*}*/
+        .main {
+            margin: 0 auto;
+            display: block;
+            height: 100%;
+            margin-top: 60px;
+        }
+        .mainInner{
+            display: table;
+            height: 100%;
+            width: 100%;
+            text-align: center;
+        }
+        .mainInner div{
+            display:table-cell;
+            vertical-align: middle;
+            font-size: 3em;
+            font-weight: bold;
+            letter-spacing: 1.25px;
+        }
+        #sidebarMenu {
+            height: 100%;
+            position: fixed;
+            left: 0;
+            width: 250px;
+            margin-top: 60px;
+            transform: translateX(-250px);
+            transition: transform 250ms ease-in-out;
+            background: linear-gradient(180deg, #005b96 0%, #c6e4f7 100%);
+        }
+        .sidebarMenuInner{
+            margin:0;
+            padding:0;
+            border-top: 1px solid rgba(255, 255, 255, 0.10);
+        }
+        .sidebarMenuInner li{
+            list-style: none;
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: bold;
+            padding: 20px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+        }
+        .sidebarMenuInner li span{
+            display: block;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.50);
+        }
+        .sidebarMenuInner li a{
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        input[type="checkbox"]:checked ~ #sidebarMenu {
+            transform: translateX(0);
+        }
+
+        input[type=checkbox] {
+            transition: all 0.3s;
+            box-sizing: border-box;
+            display: none;
+        }
+        .sidebarIconToggle {
+            transition: all 0.3s;
+            box-sizing: border-box;
+            cursor: pointer;
+            position: absolute;
+            z-index: 99;
+            height: 100%;
+            width: 100%;
+            top: 22px;
+            left: 15px;
+            height: 22px;
+            width: 22px;
+        }
+        .spinner {
+            transition: all 0.3s;
+            box-sizing: border-box;
+            position: absolute;
+            height: 3px;
+            width: 100%;
+            background-color: #fff;
+        }
+        .horizontal {
+            transition: all 0.3s;
+            box-sizing: border-box;
+            position: relative;
+            float: left;
+            margin-top: 3px;
+        }
+        .diagonal.part-1 {
+            position: relative;
+            transition: all 0.3s;
+            box-sizing: border-box;
+            float: left;
+        }
+        .diagonal.part-2 {
+            transition: all 0.3s;
+            box-sizing: border-box;
+            position: relative;
+            float: left;
+            margin-top: 3px;
+        }
+        input[type=checkbox]:checked ~ .sidebarIconToggle > .horizontal {
+            transition: all 0.3s;
+            box-sizing: border-box;
+            opacity: 0;
+        }
+        input[type=checkbox]:checked ~ .sidebarIconToggle > .diagonal.part-1 {
+            transition: all 0.3s;
+            box-sizing: border-box;
+            transform: rotate(135deg);
+            margin-top: 8px;
+        }
+        input[type=checkbox]:checked ~ .sidebarIconToggle > .diagonal.part-2 {
+            transition: all 0.3s;
+            box-sizing: border-box;
+            transform: rotate(-135deg);
+            margin-top: -9px;
+        }
+    </style>
+    <style>
+        <style>
+        .dropbtn {
+            background-color: #1b6596;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #1b6596;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {background-color: #ddd;}
+
+        .dropdown:hover .dropdown-content {display: block;}
+
+        .dropdown:hover .dropbtn {background-color: #1b6596;}
+        </style>
+    </style>
+
+
 </head>
 
-<body>
-<div class="container-fluid">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="background-color: rgba(201,88,36,0.83);">
-        <div class="container-fluid">
-            <a class="navbar-brand" th:href="@{'/'}"><i class="fa-solid fa-list-check"></i> Task Management</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" th:href="@{'/'}"><i class="fa-solid fa-house-user"></i> Home</a>
-                    </li>
 
-                    <li class="nav-item" sec:authorize="isAnonymous()">
-                        <a class="nav-link active" aria-current="page" th:href="@{'/user/signIn'}" ><i class="fa-solid fa-right-to-bracket"></i> Sign In</i></a>
-                    </li>
 
-                    <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN')">
-                        <a class="nav-link" th:href="@{'/admin/adminPanel'}">Admin Panel</a>
-                    </li>
+<body id="body-pd">
+<div class="header">
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(0,91,150,0.83);">
+            <div class="container-fluid"> <!--fa-solid fa-list-check-->
+                <a style="margin-left: 35px" class="navbar-brand" th:href="@{'/'}"><i class=""></i> Task Management</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                    <li class="nav-item" sec:authorize="hasAnyRole('ROLE_MODERATOR')">
-                        <a class="nav-link" th:href="@{'/moderator/moderatorPanel'}">Moderator Panel</a>
-                    </li>
-                    <li class="nav-item" sec:authorize="hasAnyRole('ROLE_USER')">
-                        <a class="nav-link" th:href="@{'/user/userPanel'}">User Panel</a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" th:href="@{'/'}"><i class="fa-solid fa-house-user"></i> Home</a>
+                        </li>
 
-                    <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')">
-                        <a class="nav-link active" th:href="@{'/addTask'}"> <i class="fa-solid fa-calendar-plus"></i> Add Task</a>
-                    </li>
+                        <li class="nav-item" sec:authorize="isAnonymous()">
+                            <a class="nav-link active" aria-current="page" th:href="@{'/user/signIn'}" ><i class="fa-solid fa-right-to-bracket"></i> Sign In</i></a>
+                        </li>
 
-                    <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')">
-                        <a class="nav-link active" th:href="@{'/moderator/addUser'}"> <i class="fa-solid fa-user-plus"></i> Add User</a>
-                    </li>
-                    <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')">
-                        <a class="nav-link active" th:href="@{'/announcement/addAnnouncement'}"> <i class="fa-solid fa-user-plus"></i> Add Announcement</a>
-                    </li>
+                        <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')">
+                            <a class="nav-link active" th:href="@{'/addTask'}"> <i class="fa-solid fa-calendar-plus"></i> Add Task</a>
+                        </li>
 
-                    <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${currentUser.fullName}">
-                            Dropdown
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown" >
-                            <li><a class="dropdown-item" th:href="@{'/user/profile'}" >My Profile</a></li>
-                            <li><a class="dropdown-item" th:href="@{'/user/notification'}">Notification</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="JavaScript:void(0)" onclick="document.getElementById('exitform').submit()">Log Out</a></li>
-                        </ul>
-                        <form th:action="@{'/toExit'}" id="exitform">
+                        <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')">
+                            <a class="nav-link active" th:href="@{'/moderator/addUser'}"> <i class="fa-solid fa-user-plus"></i> Add User</a>
+                        </li>
+                        <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')">
+                            <a class="nav-link active" th:href="@{'/announcement/addAnnouncement'}"> <i class="fa-solid fa-bullhorn"></i> Add Announcement</a>
+                        </li>
 
+                        <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${currentUser.fullName}"> <i class="fa-solid fa-house-person-return"></i>
+                                Dropdown
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown" >
+                                <li><a class="dropdown-item" th:href="@{'/user/profile'}" >My Profile</a></li>
+                                <li><a class="dropdown-item" th:href="@{'/user/notification'}">Notification</a></li>
+                                <li sec:authorize="hasAnyRole('ROLE_ADMIN')"><a class="dropdown-item" th:href="@{'/admin/adminPanel'}">Admin Panel</a></li>
+                                <li sec:authorize="hasAnyRole('ROLE_MODERATOR')"><a class="dropdown-item" th:href="@{'/moderator/moderatorPanel'}">Moderator Panel</a></li>
+                                <li><a class="dropdown-item" th:href="@{'/user/userPanel'}">User Panel</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="JavaScript:void(0)" onclick="document.getElementById('exitform').submit()">Log Out</a></li>
+                            </ul>
+                            <form th:action="@{'/toExit'}" id="exitform">
+
+                            </form>
+                        </li>
+
+                    </ul>
+                    <div sec:authorize="isAuthenticated()">
+                        <form th:action="@{'/user/userListSearch'}" class="d-flex" >
+                            <input class="form-control me-2" name="keyword" type="search" placeholder="Search user" aria-label="Search">
+                            <button class="btn btn-outline-success" type="submit">Search</button>
                         </form>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled">Disabled</a>
-                    </li>
-                </ul>
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
+                    </div>
+                </div>
             </div>
-        </div>
-    </nav>
-</div>
-<div class="container mt-3" style="min-height: 800px;">
-    <div class="row">
-        <div class="col-9" layout:fragment="myContent">
-
-        </div>
-        <div class="col-3">
-            <div class="list-group">
-                <a th:href="@{'/'}" class="list-group-item list-group-item-action active" aria-current="true">
-                    All TASKS
-                </a>
-                <br>
-                <a th:href="${'/importantAndUrgentTasks'}" class="list-group-item list-group-item-action active" aria-current="true">
-                    IMPORTANT & URGENT TASKS
-                </a>
-                <a th:href="${'/urgentTasks'}" class="list-group-item list-group-item-action">URGENT TASKS</a>
-                <a th:href="${'/notUrgentTasks'}" class="list-group-item list-group-item-action">NOT URGENT TASKS</a>
-                <a th:href="${'/importantTasks'}" class="list-group-item list-group-item-action">IMPORTANT TASKS</a>
-                <a th:href="${'/notImportantTasks'}" class="list-group-item list-group-item-action">NOT IMPORTANT TASKS</a>
-            </div>
-        </div>
+        </nav>
     </div>
 </div>
-<div class="container mt-3 bg-dark py-3">
+<input type="checkbox" class="openSidebarMenu" id="openSidebarMenu">
+<label for="openSidebarMenu" class="sidebarIconToggle">
+    <div class="spinner diagonal part-1"></div>
+    <div class="spinner horizontal"></div>
+    <div class="spinner diagonal part-2"></div>
+</label>
+<div id="sidebarMenu"  sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')">
+    <ul class="sidebarMenuInner">
+        <li><h3><span th:text="${currentUser.fullName}"}></span> </h3> <span>Dashboard</span></li>
+        <li><a th:href="@{'/user/profile'}" >Profile</a></li>
+        <li><div class="dropdown" >
+            <button class="dropbtn">TASKS</button>
+            <div class="dropdown-content">
+                <a th:href="@{'/main'}">All Tasks</a>
+                <a th:href="@{'/tasks/unassignedTasks'}">Unassigned Tasks</a>
+                <a th:href="@{'/tasks/completedTasks'}">Completed Tasks</a>
+                <a th:href="@{'/tasks/plannedTasks'}">Planned Tasks</a>
+                <a th:href="@{'/tasks/pendingTasks'}">Pending Tasks</a>
+                <a th:href="@{'/tasks/rejectedTasks'}">Rejected Tasks</a>
+            </div>
+        </div></li>
+        <li><a th:href="@{'/admin/userList'}" >Users</a></li>
+        <li><a th:href="@{'/'}" >Announcement</a></li>
+        <li><a href="https://www.linkedin.com/in/plavookac/" target="_blank">Linkedin</a></li>
+    </ul>
+</div>
+
+
+
+<div class="height-100 bg-light">
+    <div class="col-9" layout:fragment="myContent" style="margin-left: 10rem"> </div>
+</div>
+<!--Container Main end-->
+
+
+
+
+<!--<div class="container mt-3" style="min-height: 800px;">-->
+<!--    <div class="row">-->
+<!--        <div class="col-3" sec:authorize="isAuthenticated()">-->
+<!--            <div class="list-group">-->
+<!--                <a th:href="@{'/'}" class="list-group-item list-group-item-action active text-white" style="background-color: rgba(100,151,177, 0.83);" aria-current="true">-->
+<!--                    All TASKS-->
+<!--                </a>-->
+<!--                <br>-->
+<!--                <a th:href="${'/user/importantAndUrgentTasks'}" class="list-group-item list-group-item-action active text-white" style="background-color: rgba(100,151,177, 0.83); font: italic;" aria-current="true">-->
+<!--                    IMPORTANT & URGENT TASKS-->
+<!--                </a>-->
+<!--                <a th:href="${'/user/urgentTasks'}" class="list-group-item list-group-item-action">URGENT TASKS</a>-->
+<!--                <a th:href="${'/user/notUrgentTasks'}" class="list-group-item list-group-item-action">NOT URGENT TASKS</a>-->
+<!--                <a th:href="${'/user/importantTasks'}" class="list-group-item list-group-item-action">IMPORTANT TASKS</a>-->
+<!--                <a th:href="${'/user/notImportantTasks'}" class="list-group-item list-group-item-action">NOT IMPORTANT TASKS</a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+
+<div class="container mt-3 py-1" style="background-color: rgba(0,91,150,0.83); border-radius: 10px; bottom: 10px; position: fixed">
     <div class="row">
-        <p class="text-center text-light">Copyright &copy; 2022.</p>
+        <p class="text-center text-dark">Copyright &copy; 2022. All Rights Reserved</p>
     </div>
 </div>
 </body>

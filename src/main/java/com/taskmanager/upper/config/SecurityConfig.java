@@ -23,27 +23,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService);
     }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http.exceptionHandling().accessDeniedPage("/accessError");
-
         http.authorizeRequests()
                 .antMatchers("/css/**", "/js/**").permitAll();
-
-
         http.formLogin()
-                .loginProcessingUrl("/toEnter").permitAll() //<--where to send post request to sign in
-                .loginPage("/signIn").permitAll()//<-- default page to sign in
+                .loginProcessingUrl("/user/toEnter").permitAll() //<--where to send post request to sign in
+                .loginPage("/user/signIn").permitAll()//<-- default page to sign in
                 .usernameParameter("user_mail") //<--imput email type "email"
                 .passwordParameter("user_password") //<-- imput type "password
-                .defaultSuccessUrl("/profile") //<where to redirect after successfull signin
-                .failureUrl("/signIn?error");  //<-- where to redirect after unsuccessful signin
+                .defaultSuccessUrl("/user/profile") //<where to redirect after successfull signin
+                .failureUrl("/user/signIn?error");  //<-- where to redirect after unsuccessful signin
         http.logout()
-                .logoutSuccessUrl("/signIn") //<-- after click of logout where to redirect
+                .logoutSuccessUrl("/user/signIn") //<-- after click of logout where to redirect
                 .logoutUrl("/toExit");  //<-- url end point to sing out
-
         http.csrf().disable();
     }
     @Bean

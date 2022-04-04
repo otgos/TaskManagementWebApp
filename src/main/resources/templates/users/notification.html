@@ -5,10 +5,10 @@
 <head></head>
 
 
-    <div layout:fragment="myContent">
+<div layout:fragment="myContent">
 
-        <h2>You have  <span th:text="${taskNum}"></span> task(s) is/are assigned .</h2>
+    <h2>You have <a th:href="@{'/user/userPanel'}"><span th:text="${taskNum}"></span> task(s)</a> is/are assigned .</h2>
 
-    </div>
+</div>
 
 </html>
