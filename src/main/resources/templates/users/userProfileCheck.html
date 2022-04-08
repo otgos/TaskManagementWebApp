@@ -21,9 +21,9 @@
             </nav>
             <!-- /Breadcrumb -->
 
-            <input type="hidden" name="ids" id="userId" th:value="${user.id}">
-            <input type="hidden" name="ids" id="userName" th:value="${user.fullName}">
-            <input type="hidden" name="senderId" id="senderId" th:value="${currentUser.id}">
+
+            <input type="hidden"  id="userName" th:value="${user.fullName}">
+
             <div class="row gutters-sm">
                 <div class="col-md-4 mb-3">
                     <div class="card">
@@ -124,7 +124,7 @@
                             </div>
                         </div>
                     </div>
-
+                    <form th:action="@{/mail/composeMail}" method="post">
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -133,7 +133,9 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="/api/mail/composeMail" method="post">
+                                    <input type="hidden" name="ids" id="userId" th:value="${user.id}">
+
+                                    <input type="hidden" name="senderId" id="senderId" th:value="${currentUser.id}">
 <!--                                        <div class="mb-3">-->
 <!--                                            <label for="recipient-name" class="col-form-label">To whom:</label>-->
 <!--                                            <input type="text"  class="form-control" id="recipient-name">-->
@@ -147,31 +149,17 @@
                                             <textarea class="form-control" name="mail" id="message-text"></textarea>
                                         </div>
 
-                                    </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" onclick="sendMessage()">Send message</button>
+                                    <button type="submit" class="btn btn-primary" >Send message</button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <script>
-                        var exampleModal = document.getElementById('exampleModal')
-                        exampleModal.addEventListener('show.bs.modal', function (event) {
-                            // Button that triggered the modal
-                            var button = event.relatedTarget
-                            // Extract info from data-bs-* attributes
-                            var recipient = document.getElementById('userName').value;
-                            // If necessary, you could initiate an AJAX request here
-                            // and then do the updating in a callback.
-                            // Update the modal's content.
-                            var modalTitle = exampleModal.querySelector('.modal-title')
-                            var modalBodyInput = exampleModal.querySelector('.modal-body input')
 
-                            modalTitle.textContent = 'New message to ' + recipient
-                            // modalBodyInput.value = recipient
-                        })
+                    </div>
+                    </form>
+                    <script>
                         function sendMessage(){
                             var sender= document.getElementById("senderId").value;
                             var receiver= document.getElementById("userId").value;

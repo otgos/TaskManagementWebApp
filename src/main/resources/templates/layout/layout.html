@@ -248,6 +248,7 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown" >
                                 <li><a class="dropdown-item" th:href="@{'/user/profile'}" >My Profile</a></li>
                                 <li><a class="dropdown-item" th:href="@{'/user/notification'}">Notification</a></li>
+                                <li><a class="dropdown-item" th:href="@{'/mail/mailList'}">Messages</a></li>
                                 <li sec:authorize="hasAnyRole('ROLE_ADMIN')"><a class="dropdown-item" th:href="@{'/admin/adminPanel'}">Admin Panel</a></li>
                                 <li sec:authorize="hasAnyRole('ROLE_MODERATOR')"><a class="dropdown-item" th:href="@{'/moderator/moderatorPanel'}">Moderator Panel</a></li>
                                 <li><a class="dropdown-item" th:href="@{'/user/userPanel'}">User Panel</a></li>

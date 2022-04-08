@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/layout.html">
+<head></head>
+
+
+    <div layout:fragment="myContent">
+
+        <h2 class="mt-5 text-center">Message list.</h2> <br>
+        <div class="row mt-3 py-2" th:each="mail: ${mails}" style="background-color: rgb(179,205,224); border-radius: 10px;">
+            <div class="col-12 mx-auto">
+
+                <h5>
+                    <a th:href="@{'/mail/readMail/'+${mail.id}}" th:text="'Sender: '+${mail.sender.fullName} +'  Subject: ' + ${mail.subject}" style="color: black; text-decoration: none;"></a>
+                </h5>
+
+                <p>
+                    Posted at :<strong th:utext="${#dates.format(mail.sendDate, 'yyyy-MM-dd')}"></strong>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</html>

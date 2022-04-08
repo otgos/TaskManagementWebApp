@@ -5,7 +5,6 @@ import com.taskmanager.upper.entity.*;
 import com.taskmanager.upper.service.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
-import org.codehaus.groovy.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -324,7 +323,7 @@ public class UserController extends AuthUserConfig {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String assignRole(@RequestParam(name = "id") Long id, Model model) {
         AuthUsers user = userService.findUser(id);
-        System.out.println("you are assiging to: " + user);
+        System.out.println("you are assigning to: " + user);
         userService.assignRole(user);
         model.addAttribute("currentUser", getCurrentUser());
         return "redirect:/admin/userList";
@@ -470,27 +469,10 @@ public class UserController extends AuthUserConfig {
     public String composeMail( Model model) {
         model.addAttribute("currentUser", getCurrentUser());
 
-        return "/email/composeEmail";
+        return "/user/userProfileCheck";
     }
 
 
-    @PostMapping("/mail/composeMail")
-    @PreAuthorize("isAuthenticated()")
-    public String composeMail(@RequestParam(name="subject") String subject,
-                @RequestParam(name="senderId") AuthUsers senderId,
-                @RequestParam(name="ids") AuthUsers receiverId,
-                @RequestParam(name="mail") String body) {
-        Mail mail = new Mail();
-        mail.setSubject(subject);
-        mail.setMail(body);
-        mail.setSendDate(new Date());
-        mail.setReceiver(senderId);
-        mail.setSender(receiverId);
-        Mail newMail = mailService.addMail(mail);
-        if (newMail != null) {
-            return "redirect:/user/userProfileCheck?success";
-        }
-        return "redirect:/user/userProfileCheck?success";
-    }
+
 
 }
